@@ -83,7 +83,7 @@ export default function Home() {
         {/* HEADER */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', gap: '10px' }}>
           <div style={{ background: '#d97706', padding: '5px 12px', borderRadius: '8px', fontSize: '20px' }}>⚡</div>
-          <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>FlashAgent Tool</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>Agente grafico per Immobiliare</h1>
         </div>
         
         {/* PREVIEW */}
