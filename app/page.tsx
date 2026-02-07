@@ -9,10 +9,10 @@ export default function Home() {
   });
   const [localUrl, setLocalUrl] = useState(data.immagine);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false); // Stato per caricamento
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // 1. COMPRESSIONE FOTO
-  const handleFile = async (e) => {
+  const handleFile = async (e: any) => { // NOTA: Ho aggiunto : any qui
     const file = e.target.files[0];
     if (!file) return;
 
@@ -21,27 +21,28 @@ export default function Home() {
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = (event) => {
+    reader.onload = (event: any) => { // NOTA: e anche qui
       const img = new Image();
       img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800; // Ridotto leggermente per sicurezza
+        const MAX_WIDTH = 800;
         const scaleSize = MAX_WIDTH / img.width;
         canvas.width = MAX_WIDTH;
         canvas.height = img.height * scaleSize;
 
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-        setData(prev => ({ ...prev, immagine: compressedDataUrl }));
+        if (ctx) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            setData(prev => ({ ...prev, immagine: compressedDataUrl }));
+        }
         setIsCompressing(false);
       };
     };
   };
 
-  // 2. DOWNLOAD VIA POST (La parte che risolve il tuo errore)
+  // 2. DOWNLOAD VIA POST
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
@@ -53,7 +54,6 @@ export default function Home() {
 
       if (!response.ok) throw new Error("Errore generazione");
 
-      // Trasforma la risposta in un file scaricabile
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -116,17 +116,17 @@ export default function Home() {
             <input type="file" accept="image/*" onChange={handleFile} style={{ display: 'none' }} />
           </label>
 
-          <input style={inputStyle} type="text" placeholder="Titolo" value={data.titolo} onChange={e => setData({...data, titolo: e.target.value})} />
-          <textarea style={{...inputStyle, height: '70px', resize: 'none'}} placeholder="Descrizione..." value={data.desc} onChange={e => setData({...data, desc: e.target.value})} />
+          <input style={inputStyle} type="text" placeholder="Titolo" value={data.titolo} onChange={(e: any) => setData({...data, titolo: e.target.value})} />
+          <textarea style={{...inputStyle, height: '70px', resize: 'none'}} placeholder="Descrizione..." value={data.desc} onChange={(e: any) => setData({...data, desc: e.target.value})} />
           
           <div style={{ display: 'flex', gap: '10px' }}>
-            <input style={{...inputStyle, flex: 1}} type="text" placeholder="€ Prezzo" value={data.prezzo} onChange={e => setData({...data, prezzo: e.target.value})} />
-            <input style={{...inputStyle, flex: 1}} type="text" placeholder="MQ" value={data.mq} onChange={e => setData({...data, mq: e.target.value})} />
+            <input style={{...inputStyle, flex: 1}} type="text" placeholder="€ Prezzo" value={data.prezzo} onChange={(e: any) => setData({...data, prezzo: e.target.value})} />
+            <input style={{...inputStyle, flex: 1}} type="text" placeholder="MQ" value={data.mq} onChange={(e: any) => setData({...data, mq: e.target.value})} />
           </div>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            <input style={{...inputStyle, flex: 2}} type="text" placeholder="Zona / Città" value={data.localita} onChange={e => setData({...data, localita: e.target.value})} />
-            <select style={{...inputStyle, flex: 1}} value={data.classe} onChange={e => setData({...data, classe: e.target.value})}>
+            <input style={{...inputStyle, flex: 2}} type="text" placeholder="Zona / Città" value={data.localita} onChange={(e: any) => setData({...data, localita: e.target.value})} />
+            <select style={{...inputStyle, flex: 1}} value={data.classe} onChange={(e: any) => setData({...data, classe: e.target.value})}>
               <option value="A4">A4</option><option value="A">A</option><option value="B">B</option>
               <option value="G">G</option>
             </select>
